@@ -1,0 +1,12 @@
+Metric,Value
+Accuracy,0.9474913099961377
+Precision,0.0277505713352922
+Recall,0.8673469387755102
+F1 Score,0.05378044922492882
+True Negatives,53886.0
+False Positives,2978.0
+False Negatives,13.0
+True Positives,85.0
+Actual Fraud Cases,98.0
+Fraud Cases Caught,85.0
+Fraud Cases Missed,13.0
