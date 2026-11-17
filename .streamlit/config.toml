@@ -1,0 +1,52 @@
+# THE FRAUD BUREAU - IntelliFraud dashboard theme.
+# Financial intelligence look: near-black canvas, charcoal panels, thin borders,
+# white headings, grey secondary text, restrained green (legitimate / normal)
+# and red (fraud / anomaly) accents. Only official Streamlit options (1.63).
+# Fonts are listed with local system fallbacks - nothing is downloaded.
+
+[client]
+toolbarMode = "minimal"                # hides the developer "Deploy" button
+
+[theme]
+base = "dark"
+
+# Surfaces
+backgroundColor = "#0F1114"            # near-black canvas
+secondaryBackgroundColor = "#171A1F"   # charcoal: panels, inputs
+borderColor = "#262B32"                # thin borders
+dataframeBorderColor = "#22272D"
+dataframeHeaderBackgroundColor = "#171A1F"
+showWidgetBorder = true
+showSidebarBorder = true
+baseRadius = "6px"                     # subtle rounding
+buttonRadius = "6px"
+
+# Text and accents
+textColor = "#E8EAED"
+primaryColor = "#2DAE78"               # restrained green: actions, active selections
+linkColor = "#7FA9E6"
+
+# Status colours (st.success / st.warning / st.error / st.info)
+greenColor = "#2DAE78"
+redColor = "#D8343F"
+yellowColor = "#B9851A"
+orangeColor = "#B9851A"
+blueColor = "#4C86D9"
+
+# Typography
+font = "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif"
+headingFont = "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif"
+codeFont = "'SF Mono', 'IBM Plex Mono', Menlo, Consolas, monospace"
+codeBackgroundColor = "#1C2026"
+codeTextColor = "#C9CED6"
+baseFontSize = 14
+metricValueFontSize = "1.5rem"
+
+# Charts (validated for the dark surface): legitimate green, fraud red,
+# synthetic-fraud amber, baseline blue, Improved v2 gold.
+chartCategoricalColors = ["#2DAE78", "#D8343F", "#B9851A", "#4C86D9", "#B48C3C"]
+
+[theme.sidebar]
+backgroundColor = "#0B0D10"
+secondaryBackgroundColor = "#171A1F"
+borderColor = "#22272D"
