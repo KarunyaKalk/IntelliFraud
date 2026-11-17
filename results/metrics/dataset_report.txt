@@ -1,0 +1,178 @@
+IntelliFraud - Dataset EDA Report
+Dataset file : data/creditcard.csv
+SHA-256      : 76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89
+pandas 3.0.5, numpy 2.4.6, matplotlib 3.11.2
+
+======================================================================
+1. DATASET DIMENSIONS
+======================================================================
+Rows (transactions): 284,807
+Columns            : 31
+Memory in pandas   : 70.6 MB
+
+======================================================================
+2. FIRST FIVE ROWS (shown sideways: one column per row)
+======================================================================
+                 0         1           2           3          4
+Time      0.000000  0.000000    1.000000    1.000000   2.000000
+V1       -1.359807  1.191857   -1.358354   -0.966272  -1.158233
+V2       -0.072781  0.266151   -1.340163   -0.185226   0.877737
+V3        2.536347  0.166480    1.773209    1.792993   1.548718
+V4        1.378155  0.448154    0.379780   -0.863291   0.403034
+V5       -0.338321  0.060018   -0.503198   -0.010309  -0.407193
+V6        0.462388 -0.082361    1.800499    1.247203   0.095921
+V7        0.239599 -0.078803    0.791461    0.237609   0.592941
+V8        0.098698  0.085102    0.247676    0.377436  -0.270533
+V9        0.363787 -0.255425   -1.514654   -1.387024   0.817739
+V10       0.090794 -0.166974    0.207643   -0.054952   0.753074
+V11      -0.551600  1.612727    0.624501   -0.226487  -0.822843
+V12      -0.617801  1.065235    0.066084    0.178228   0.538196
+V13      -0.991390  0.489095    0.717293    0.507757   1.345852
+V14      -0.311169 -0.143772   -0.165946   -0.287924  -1.119670
+V15       1.468177  0.635558    2.345865   -0.631418   0.175121
+V16      -0.470401  0.463917   -2.890083   -1.059647  -0.451449
+V17       0.207971 -0.114805    1.109969   -0.684093  -0.237033
+V18       0.025791 -0.183361   -0.121359    1.965775  -0.038195
+V19       0.403993 -0.145783   -2.261857   -1.232622   0.803487
+V20       0.251412 -0.069083    0.524980   -0.208038   0.408542
+V21      -0.018307 -0.225775    0.247998   -0.108300  -0.009431
+V22       0.277838 -0.638672    0.771679    0.005274   0.798278
+V23      -0.110474  0.101288    0.909412   -0.190321  -0.137458
+V24       0.066928 -0.339846   -0.689281   -1.175575   0.141267
+V25       0.128539  0.167170   -0.327642    0.647376  -0.206010
+V26      -0.189115  0.125895   -0.139097   -0.221929   0.502292
+V27       0.133558 -0.008983   -0.055353    0.062723   0.219422
+V28      -0.021053  0.014724   -0.059752    0.061458   0.215153
+Amount  149.620000  2.690000  378.660000  123.500000  69.990000
+Class     0.000000  0.000000    0.000000    0.000000   0.000000
+
+======================================================================
+3. COLUMN NAMES AND DATA TYPES
+======================================================================
+Time      float64
+V1        float64
+V2        float64
+V3        float64
+V4        float64
+V5        float64
+V6        float64
+V7        float64
+V8        float64
+V9        float64
+V10       float64
+V11       float64
+V12       float64
+V13       float64
+V14       float64
+V15       float64
+V16       float64
+V17       float64
+V18       float64
+V19       float64
+V20       float64
+V21       float64
+V22       float64
+V23       float64
+V24       float64
+V25       float64
+V26       float64
+V27       float64
+V28       float64
+Amount    float64
+Class       int64
+
+Data type counts: float64=30, int64=1
+
+======================================================================
+4. CLASS BALANCE (Class: 0 = legitimate, 1 = fraud)
+======================================================================
+Legitimate transactions: 284,315
+Fraudulent transactions: 492
+Fraud percentage       : 0.1727%
+Ratio                  : about 1 fraud per 578 legitimate transactions
+Accuracy of a model that ALWAYS says 'legitimate': 99.8273%
+
+======================================================================
+5. MISSING VALUES PER COLUMN
+======================================================================
+Time      0
+V1        0
+V2        0
+V3        0
+V4        0
+V5        0
+V6        0
+V7        0
+V8        0
+V9        0
+V10       0
+V11       0
+V12       0
+V13       0
+V14       0
+V15       0
+V16       0
+V17       0
+V18       0
+V19       0
+V20       0
+V21       0
+V22       0
+V23       0
+V24       0
+V25       0
+V26       0
+V27       0
+V28       0
+Amount    0
+Class     0
+
+Total missing values: 0
+
+======================================================================
+6. DUPLICATE ROWS (counted only, NOT removed)
+======================================================================
+Extra copies (rows identical to an earlier row): 1,081
+Rows involved in duplication (incl. originals) : 1,854
+Distinct rows after hypothetical de-duplication: 283,726
+Extra copies that are legitimate (Class 0)     : 1,062
+Extra copies that are fraud (Class 1)          : 19
+Fraud rows involved in duplication             : 32
+Identical features but DIFFERENT labels        : 0 groups
+
+Duplicates across the EXISTING train/test split (models/test_indices.csv, read-only):
+  Test rows                                     : 56,962
+  Test rows with an exact copy in training data : 344
+  ...of which are fraud                         : 8
+
+======================================================================
+7. TRANSACTION AMOUNT STATISTICS (Amount column)
+======================================================================
+             All  Legitimate    Fraud
+count  284807.00   284315.00   492.00
+mean       88.35       88.29   122.21
+std       250.12      250.11   256.68
+min         0.00        0.00     0.00
+25%         5.60        5.65     1.00
+50%        22.00       22.00     9.25
+75%        77.16       77.05   105.89
+95%       365.00      364.41   640.90
+99%      1017.97     1016.97  1357.43
+max     25691.16    25691.16  2125.87
+
+All         skewness=  16.98 | zero-amount transactions=1,825 (0.64%) | sum=25,162,590.01
+Legitimate  skewness=  17.00 | zero-amount transactions=1,798 (0.63%) | sum=25,102,462.04
+Fraud       skewness=   3.75 | zero-amount transactions=27 (5.49%) | sum=60,127.97
+
+======================================================================
+8. TIME COLUMN (seconds since the first transaction)
+======================================================================
+Min: 0 s | Max: 172,792 s (= 48.0 hours)
+
+======================================================================
+9. SAVED FILES
+======================================================================
+results/graphs/class_distribution.png
+results/graphs/amount_distribution.png
+results/graphs/amount_by_class.png
+results/metrics/dataset_report.txt
