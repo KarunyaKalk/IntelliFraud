@@ -18,3 +18,6 @@ data/creditcard.csv
 .streamlit/secrets.toml
 # Python virtual environment (macOS setup)
 .venv/
+
+# Synthetic dataset (large, regenerable with src/generate_synthetic_data.py, seed 42)
+data/synthetic/*.csv
