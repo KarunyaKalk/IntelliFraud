@@ -1,6 +1,6 @@
 # Fraud Detection Using Autoencoders
 
-## 📌 Project Overview
+## Project Overview
 
 Fraudulent credit card transactions are rare compared with normal transactions, making traditional supervised fraud detection challenging when reliable fraud labels are unavailable during training.
 
@@ -12,7 +12,7 @@ The project also compares the Autoencoder with **Isolation Forest** and **One-Cl
 
 ---
 
-## 🎯 Project Objectives
+## Project Objectives
 
 - Train an Autoencoder using normal transactions only.
 - Detect unusual transactions using reconstruction error.
@@ -22,7 +22,7 @@ The project also compares the Autoencoder with **Isolation Forest** and **One-Cl
 
 ---
 
-## 📊 Dataset
+## Dataset
 
 The project uses the **Credit Card Fraud Detection Dataset** from Kaggle.
 
@@ -41,7 +41,7 @@ The dataset is highly imbalanced, with fraud representing a very small percentag
 
 ---
 
-## 🧠 Autoencoder
+## Autoencoder
 
 The Autoencoder learns the patterns of normal transactions and reconstructs the input.
 
@@ -50,7 +50,7 @@ The Autoencoder learns the patterns of normal transactions and reconstructs the 
 ```text
 30 → 16 → 8 → 16 → 30
 
-🧪 Training Methodology
+Training Methodology
 
 An 80/20 stratified train-test split is used.
 
@@ -67,7 +67,7 @@ Fraud transactions: 98
 
 Fraud labels are used only after predictions are generated.
 
-🚨 Anomaly Detection
+Anomaly Detection
 
 The Autoencoder calculates a reconstruction error for each transaction.
 
@@ -79,7 +79,7 @@ The threshold is based on the 95th percentile of normal training errors.
 
 Final threshold: 1.0739
 
-📈 Autoencoder Results
+Autoencoder Results
 Metric	Result
 Accuracy	94.75%
 Precision	2.78%
@@ -93,7 +93,7 @@ Actual Fraud	13	          85
 
 The model detected 85 out of 98 fraud cases in the held-out test set.
 
-🆚 Model Comparison
+Model Comparison
 Model	                  Accuracy	    Precision	    Recall	          F1 Score     Fraud Caught
 Autoencoder	           94.75%	      2.78%	    86.73%	           5.38%	   85/98
 Isolation Forest	   94.76%	      2.81%	    87.76%	           5.45%	   86/98
@@ -101,7 +101,7 @@ One-Class SVM	           93.26%	      2.25%	    89.80%	           4.38%	   88/98
 Best F1: Isolation Forest – 5.45%
 Highest Recall: One-Class SVM – 89.80%
 Primary Model: Autoencoder
-🌐 Streamlit Dashboard
+Streamlit Dashboard
 
 The dashboard provides:
 
@@ -115,7 +115,7 @@ CSV download
 
 For flagged transactions, the dashboard explains that the reconstruction error exceeds the threshold.
 
-🛠️ Technologies Used
+Technologies Used
 Technology	Purpose
 Python	Main programming language
 Pandas, NumPy	Data processing and numerical operations
@@ -129,7 +129,7 @@ Joblib	Saving/loading scaler
 Git & GitHub	Version control and repository
 VS Code	Development environment
 
-📁 Project Structure
+Project Structure
 Fraud-Detection-Autoencoder/
 │
 ├── data/
@@ -158,7 +158,7 @@ Fraud-Detection-Autoencoder/
 ├── requirements.txt
 └── .gitignore
 
-⚙️ Installation
+Installation
 
 Install the required packages:
 
@@ -170,7 +170,7 @@ data/creditcard.csv
 
 The dataset is excluded from GitHub because of its large size.
 
-▶️ How to Run
+How to Run
 Train the model
 python train.py
 Evaluate the model
@@ -180,7 +180,7 @@ python src/compare_models.py
 Run the dashboard
 python -m streamlit run app.py
 
-🔐 Important Fraud-Label Rule
+Important Fraud-Label Rule
 
 Fraud labels are not used during Autoencoder training.
 
@@ -192,7 +192,7 @@ F1 Score
 Fraud cases detected
 Confusion matrix
 
-🏆 Conclusion
+Conclusion
 
 This project demonstrates an unsupervised Autoencoder-based approach to fraud detection without using fraud labels during training.
 
