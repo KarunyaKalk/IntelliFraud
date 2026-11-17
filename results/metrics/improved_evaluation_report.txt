@@ -1,0 +1,127 @@
+IntelliFraud - Improved v2 Autoencoder: evaluation and paired comparison with the baseline
+(read-only for both models; no training, no threshold tuning on test data)
+
+==========================================================================
+0. INPUT FILES (SHA-256 fingerprints)
+==========================================================================
+data/creditcard.csv                        76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89
+models/autoencoder.keras                   709bf27a8c3d468b310fa9d145b339cb6062b476aac8ee441e2162fc6c15c85b
+models/scaler.pkl                          32843d17d07cf8e8be52163066ac501dd9a4a1e03e1cb29132b112819d1c26c4
+models/threshold.txt                       cd322ff1be1425c4650daa7cbd83e8904e5467000ae9dfa362b5c913cc5434cb
+models/test_indices.csv                    5e4619849e37186da8ececd54215ca2629570d7e1af8aaa6e7feff38a1615948
+models/training_history.csv                5aa126f610cc82e00bb2fd90c7b69a69aafc8be6050a21d3bce4c8ef972bf27d
+models/evaluation_results.csv              8a2bc65256294e3ade3822de08e1b97fc0804504d6c23ea1be5bb6c2bb495472
+models/model_comparison.csv                b93d90b410d0b69edddf2f66e1445cae5ccf0285275169572ed2e013523b77cd
+results/metrics/baseline_test_scores.csv   fa587d8532fdcdea72b3763ea99ad914c1fe73ed597e958d6df0cc2d2f9a5338
+results/metrics/baseline_metrics.csv       37710d947008eebb66902233dd26c6932e04ef10ebfa91050f1cb5d2ba4346b7
+results/metrics/baseline_evaluation_report.txt 227b2ad8ac12701292598f1b2613a82055d817a379a5ba5b7c602c5f65a44895
+models/improved/autoencoder.keras          f906e5f88a71f8644a1fd4cf2a6c564ea415fd01bfa4f2d1a1ce7339d2a3d14c
+models/improved/scaler.pkl                 571777f7aefc35601f49771c282ff5778fa84ee391d02367747b5f4cf4e0807f
+models/improved/threshold.txt              d2eb969f1f0e566b17728880bc921bc958074acd9f7049fb9f6dc99ea857f4fa
+models/improved/training_history.csv       c37d990f6074b0f7abdc88f894c56de252cce8d674d6b66e0a59c520ec5dbb03
+models/improved/config.json                56ae1e69639e69bc9436d40aaebe91b230b98c48f8443ef62367bf225f056adb
+models/improved/train_indices.csv          d0a8e1ffdda2ee020243bbe8ec66730d64572b23087ceb5b6f5fedd907d35b01
+models/improved/validation_indices.csv     87757c175094eaefc79f58656a67bacecc52e50f46a4f58359181039e3bab4d9
+
+==========================================================================
+1. VERIFICATION - same official test rows as the baseline
+==========================================================================
+Official test rows (models/test_indices.csv): 56,962
+Baseline scores cover the same rows in the same order: True
+Class labels identical to the baseline file: True
+Baseline metrics recomputed from its scores match baseline_metrics.csv: True (TN 53,886, FP 2,978, FN 13, TP 85)
+
+==========================================================================
+2. IMPROVED v2 SET-UP (from models/improved/config.json)
+==========================================================================
+training_split_rows                     227,845
+training_split_fraud_rows_excluded          394
+legitimate_training_pool_rows           227,451
+repeated_copies_removed                     707
+after_removing_repeats                  226,744
+test_set_twins_removed                      286
+clean_pool_rows                         226,458
+training_rows                           192,489
+validation_rows                          33,969
+Epochs completed: 100 (max 100), best epoch 100, stopped early: False, training time 13.9 s
+Threshold: 0.982001 = 95th percentile of validation reconstruction errors (baseline: 1.073887, 95th percentile of its own training errors)
+Leakage checks passed during training: True
+
+==========================================================================
+3. OFFICIAL TEST SET: BASELINE vs IMPROVED v2 (56,962 identical rows)
+==========================================================================
+Metric                    Baseline 95% CI               Improved v2 95% CI              
+Precision                    2.78% [2.53% - 3.00%]            2.74% [2.48% - 2.97%]     
+Recall                      86.73% [79.59% - 92.86%]         85.71% [78.55% - 91.86%]   
+F1-score                     5.38% [4.90% - 5.82%]            5.30% [4.82% - 5.76%]     
+Average Precision           0.3409 [0.2618 - 0.4469]         0.3454 [0.2690 - 0.4570]   
+PR-AUC (trapezoidal)        0.3333 [0.2510 - 0.4385]         0.3376 [0.2587 - 0.4474]   
+ROC-AUC                     0.9507 [0.9171 - 0.9786]         0.9554 [0.9245 - 0.9789]   
+Specificity                 94.76%                           94.75%
+False-positive rate          5.24%                            5.25%
+Accuracy                    94.75%                           94.73%
+False alarms per catch        35.0                             35.6
+
+Confusion matrices (rows = actual, columns = predicted normal / anomaly):
+  Baseline     legit: 53,886 / 2,978    fraud:  13 /  85
+  Improved v2  legit: 53,877 / 2,987    fraud:  14 /  84
+
+CI method: stratified percentile bootstrap, identical to the baseline report (1,000 resamples, seed 42, class counts preserved, thresholds fixed).
+
+==========================================================================
+4. PAIRED BOOTSTRAP - is Improved v2 better? (primary metric: Average Precision)
+==========================================================================
+Method: in each of 1,000 stratified resamples (seed 42) BOTH models are scored on the same
+resampled test rows; the difference Improved v2 - baseline is recorded. 95% CI = 2.5th-97.5th
+percentile. Pre-agreed rule: improvement is statistically supported ONLY if the whole CI > 0.
+
+Observed AP: baseline 0.3409, Improved v2 0.3454
+Observed AP difference (Improved v2 - baseline): +0.0045
+Paired 95% CI for the difference: [-0.0438, +0.0522]
+Share of resamples where Improved v2 had higher AP: 57.0%
+
+DECISION: Improvement NOT established. The 95% CI includes zero, so the data cannot distinguish the two models on Average Precision.
+
+Secondary paired differences (descriptive only, not used for the decision):
+  PR-AUC (trapezoidal)   +0.0043   95% CI [-0.0484, +0.0561]
+  ROC-AUC                +0.0047   95% CI [-0.0089, +0.0187]
+  Precision              -0.0398 pp   95% CI [-0.1526, +0.0556] pp
+  Recall                 -1.0204 pp   95% CI [-3.0612, +0.0000] pp
+  F1-score               -0.0767 pp   95% CI [-0.2889, +0.1036] pp
+
+==========================================================================
+5. SENSITIVITY ANALYSIS (NOT official) - same 344 duplicate-overlap rows removed
+==========================================================================
+Rows kept: 56,618 (fraud 90); the removed rows are those with an exact copy in the ORIGINAL baseline training split.
+Metric                    Baseline   Improved v2
+Precision                    2.58%         2.54%
+Recall                      85.56%        84.44%
+F1-score                     5.00%         4.93%
+Average Precision           0.3005        0.3072
+PR-AUC (trapezoidal)        0.2939        0.3007
+ROC-AUC                     0.9466        0.9519
+Note: Improved v2 has NO exact overlap with the test set by construction (test twins removed).
+
+==========================================================================
+6. LIMITATIONS
+==========================================================================
+1. Training reached the maximum of 100 epochs and early stopping did not trigger. The best validation loss (0.4319) occurred at epoch 100, the final epoch. Validation loss was still decreasing slowly near the end of training (0.4329 at epoch 93 -> 0.4319 at epoch 100), so the model may not be fully converged. Further training might be worth exploring in future work; no additional training was performed for this evaluation.
+2. Only 98 test frauds: confidence intervals are wide and small differences are not meaningful.
+3. Same random (not time-based) split and the same Time feature as the baseline, so the time-ordering limitation still applies.
+4. The threshold rule (95th percentile of legitimate validation errors) fixes the false-alarm rate on legitimate data near 5%; it is not optimised for fraud detection (by design: no labels).
+5. Reproducibility: seeds and TensorFlow op determinism were set; identical results are expected on the same machine and software versions, not guaranteed across different hardware.
+6. The 70 duplicate copies inside the official test set were kept, so both models are compared on the original test rows.
+
+==========================================================================
+7. INTEGRITY CHECK AND OUTPUT FILES
+==========================================================================
+Baseline, dataset and Improved v2 model files unchanged after run: True
+results/metrics/improved_evaluation_report.txt
+results/metrics/improved_metrics.csv
+results/metrics/improved_test_scores.csv
+results/metrics/model_comparison_baseline_vs_improved.csv
+results/graphs/improved_training_history.png
+results/graphs/improved_pr_curve.png
+results/graphs/improved_reconstruction_error_distribution.png
+results/graphs/improved_confusion_matrix.png
+results/graphs/pr_curve_baseline_vs_improved.png

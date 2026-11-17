@@ -1,0 +1,112 @@
+{
+  "model_name": "Improved v2",
+  "description": "Same architecture/features as the baseline; de-duplicated legitimate training pool, test-set twins removed, 85/15 train/validation split, early stopping on validation, threshold = 95th percentile of validation errors.",
+  "random_seed": 42,
+  "op_determinism": true,
+  "feature_names": [
+    "Time",
+    "V1",
+    "V2",
+    "V3",
+    "V4",
+    "V5",
+    "V6",
+    "V7",
+    "V8",
+    "V9",
+    "V10",
+    "V11",
+    "V12",
+    "V13",
+    "V14",
+    "V15",
+    "V16",
+    "V17",
+    "V18",
+    "V19",
+    "V20",
+    "V21",
+    "V22",
+    "V23",
+    "V24",
+    "V25",
+    "V26",
+    "V27",
+    "V28",
+    "Amount"
+  ],
+  "feature_order_source": "models/scaler.pkl (baseline) feature_names_in_",
+  "architecture": [
+    30,
+    16,
+    8,
+    16,
+    30
+  ],
+  "architecture_source": "src/autoencoder.py build_autoencoder (unchanged)",
+  "reconstruction_error": "mean squared error over the 30 scaled features (src/anomaly_detection.calculate_reconstruction_error)",
+  "training_parameters": {
+    "optimizer": "adam",
+    "loss": "mse",
+    "batch_size": 512,
+    "max_epochs": 100,
+    "early_stopping_monitor": "val_loss",
+    "patience": 5,
+    "restore_best_weights": true,
+    "shuffle": true
+  },
+  "split": {
+    "validation_size": 0.15,
+    "random_state": 42,
+    "duplicate_definition": "identical values in all 30 feature columns (Class excluded)"
+  },
+  "row_counts": {
+    "dataset_rows": 284807,
+    "official_test_rows": 56962,
+    "training_split_rows": 227845,
+    "training_split_fraud_rows_excluded": 394,
+    "legitimate_training_pool_rows": 227451,
+    "repeated_copies_removed": 707,
+    "after_removing_repeats": 226744,
+    "test_set_twins_removed": 286,
+    "clean_pool_rows": 226458,
+    "training_rows": 192489,
+    "validation_rows": 33969
+  },
+  "leakage_checks": {
+    "no_fraud_in_training": true,
+    "no_fraud_in_validation": true,
+    "training_validation_disjoint_rows": true,
+    "training_validation_no_identical_transactions": true,
+    "training_no_test_rows": true,
+    "validation_no_test_rows": true,
+    "training_no_test_twins": true,
+    "validation_no_test_twins": true,
+    "no_repeats_in_training_plus_validation": true
+  },
+  "threshold": 0.9820008078297001,
+  "threshold_rule": "95th percentile of validation reconstruction errors",
+  "results": {
+    "epochs_completed": 100,
+    "best_epoch": 100,
+    "stopped_early": false,
+    "best_val_loss": 0.43193867802619934,
+    "training_seconds": 13.9,
+    "validation_share_above_threshold": 0.050016191233183196,
+    "training_share_above_threshold": 0.05122370628971006
+  },
+  "input_fingerprints": {
+    "data/creditcard.csv": "76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89",
+    "models/test_indices.csv": "5e4619849e37186da8ececd54215ca2629570d7e1af8aaa6e7feff38a1615948",
+    "models/scaler.pkl": "32843d17d07cf8e8be52163066ac501dd9a4a1e03e1cb29132b112819d1c26c4"
+  },
+  "software": {
+    "python": "3.12.16",
+    "tensorflow": "2.21.0",
+    "keras": "3.15.1",
+    "scikit-learn": "1.9.0",
+    "numpy": "2.4.6",
+    "pandas": "3.0.5",
+    "machine": "arm64"
+  }
+}
