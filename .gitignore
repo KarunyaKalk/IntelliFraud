@@ -16,3 +16,5 @@ data/creditcard.csv
 
 # Streamlit
 .streamlit/secrets.toml
+# Python virtual environment (macOS setup)
+.venv/
