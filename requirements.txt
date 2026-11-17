@@ -22,3 +22,6 @@ watchdog==6.0.0
 
 # Plots for EDA / report figures (src/eda.py)
 matplotlib==3.11.2
+
+# Automated tests (tests/) - run with: python -m pytest
+pytest==9.2.0
