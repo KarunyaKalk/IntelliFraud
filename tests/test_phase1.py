@@ -316,7 +316,7 @@ def test_t9_t10_default_dataset_labels_and_detection():
 
     at.button(key="detect_button").click().run()
     assert not at.exception
-    assert metric_value(at, "🚨 Anomalies Detected") == "14,769"
+    assert metric_value(at, "Anomalies Detected") == "14,769"
     assert metric_value(at, "Transactions Scored") == "284,807"
 
 
@@ -350,7 +350,7 @@ def test_t12_dashboard_download_can_be_uploaded(full_df, components):
     at.button(key="detect_button").click().run()
     assert not at.exception
     assert not [e.value for e in at.error]
-    assert metric_value(at, "🚨 Anomalies Detected") == f"{len(downloaded):,}"
+    assert metric_value(at, "Anomalies Detected") == f"{len(downloaded):,}"
     assert "were ignored by the model" in page_text(at)
 
 
