@@ -1,0 +1,142 @@
+IntelliFraud - BASELINE evaluation of the ORIGINAL Autoencoder
+(pre-existing model, evaluated read-only; no retraining, no tuning)
+
+==========================================================================
+0. INPUT FILES (SHA-256 fingerprints)
+==========================================================================
+data/creditcard.csv                76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89
+models/autoencoder.keras           709bf27a8c3d468b310fa9d145b339cb6062b476aac8ee441e2162fc6c15c85b
+models/scaler.pkl                  32843d17d07cf8e8be52163066ac501dd9a4a1e03e1cb29132b112819d1c26c4
+models/threshold.txt               cd322ff1be1425c4650daa7cbd83e8904e5467000ae9dfa362b5c913cc5434cb
+models/test_indices.csv            5e4619849e37186da8ececd54215ca2629570d7e1af8aaa6e7feff38a1615948
+models/evaluation_results.csv      8a2bc65256294e3ade3822de08e1b97fc0804504d6c23ea1be5bb6c2bb495472
+models/model_comparison.csv        b93d90b410d0b69edddf2f66e1445cae5ccf0285275169572ed2e013523b77cd
+models/training_history.csv        5aa126f610cc82e00bb2fd90c7b69a69aafc8be6050a21d3bce4c8ef972bf27d
+
+==========================================================================
+1. VERIFICATION - reproduce the original evaluation (src/evaluate.py logic)
+==========================================================================
+True Negatives   stored=53,886  reproduced=53,886  MATCH
+False Positives  stored= 2,978  reproduced= 2,978  MATCH
+False Negatives  stored=    13  reproduced=    13  MATCH
+True Positives   stored=    85  reproduced=    85  MATCH
+Split re-created from train.py settings matches test_indices.csv: True
+RESULT: original confusion matrix verified - proceeding.
+
+==========================================================================
+2. VERIFICATION - threshold provenance (training-normal rows only)
+==========================================================================
+Training-normal rows scored        : 227,451 (fraud rows used: 0)
+Saved threshold (threshold.txt)    : 1.0738874675
+Recomputed 95th percentile        : 1.0738875414
+Relative difference                : 6.89e-08
+Allowed relative tolerance         : 1e-05
+RESULT: threshold reproduced from training-normal errors within tolerance. Test data played no part.
+Share of training-normal rows above threshold: 5.00% (by design ~5%)
+
+==========================================================================
+3. OFFICIAL BASELINE - full held-out test set, original threshold
+==========================================================================
+Test transactions : 56,962  (normal 56,864, fraud 98)
+Threshold         : 1.0739 (unchanged)
+
+Confusion matrix (rows = actual, columns = predicted):
+                    Pred. normal   Pred. fraud
+  Actual normal           53,886         2,978
+  Actual fraud                13            85
+
+Metric                                 Value   95% bootstrap CI
+Precision                              2.78%   [2.53% - 3.00%]
+Recall (fraud caught)                 86.73%   [79.59% - 92.86%]
+F1-score                               5.38%   [4.90% - 5.82%]
+Average Precision (AP)                0.3409   [0.2618 - 0.4469]
+PR-AUC (trapezoidal)                  0.3333   [0.2510 - 0.4385]
+ROC-AUC                               0.9507   [0.9171 - 0.9786]
+Specificity (normal kept normal)      94.76%
+False-positive rate                    5.24%
+Accuracy                              94.75%
+Accuracy of always saying normal      99.83%
+No-skill PR-AUC (= fraud rate)        0.0017
+False alarms per fraud caught           35.0
+
+Confidence-interval method (stratified percentile bootstrap):
+  - 1,000 resamples, random seed 42.
+  - In each resample, 56,864 legitimate rows are drawn with replacement from the legitimate test rows
+    and 98 fraud rows are drawn with replacement from the fraud test rows, so every resample keeps
+    the original class counts (and fraud rate) exactly.
+  - Metrics are recomputed on each resample with the threshold held fixed; the 95% CI is the
+    2.5th-97.5th percentile range of the 1,000 values. Point estimates use the real test set.
+  - The CI reflects which rows happened to land in the test set; it does not capture retraining
+    variability (different weights/threshold), which this read-only evaluation cannot measure.
+
+==========================================================================
+4. SENSITIVITY ANALYSIS (NOT the official baseline) - duplicates removed
+==========================================================================
+Removed test rows with an exact copy in the training set: 344 (normal 336, fraud 8)
+  of which seen by the Autoencoder (copy in training-normal): 336
+Remaining: 56,618 rows (normal 56,528, fraud 90)
+
+Duplicate detection method (all 31 columns, including Time, Amount and Class):
+  Step 1 - row hashes find candidate matches; Step 2 - every candidate is confirmed by
+  comparing all column values directly. Only confirmed matches count as duplicates.
+  vs whole training set : 344 hash candidates, 344 confirmed, 0 rejected (hash collisions)
+  vs training-normal set: 336 hash candidates, 336 confirmed, 0 rejected (hash collisions)
+
+Metric                          Official  Dup-excluded
+True positives                        85            77
+False positives                    2,978         2,910
+False negatives                       13            13
+True negatives                    53,886        53,618
+Precision                          2.78%         2.58%
+Recall                            86.73%        85.56%
+F1-score                           5.38%         5.00%
+False-positive rate                5.24%         5.15%
+Average Precision                 0.3409        0.3005
+PR-AUC (trapezoidal)              0.3333        0.2939
+ROC-AUC                           0.9507        0.9466
+
+Duplicated normal test rows the Autoencoder had already seen:
+  flagged as fraud: 68 of 336 | median error 0.5091 vs median of all normal test rows 0.3277
+Duplicate copies inside the test set itself (extra copies): 70
+
+Interpretation: without the overlapping rows, Average Precision is LOWER (0.3005 vs 0.3409). 8 of the 8 removed frauds had been caught, and 68 of the 336 removed normal rows had been false alarms.
+
+==========================================================================
+5. RECONSTRUCTION ERROR SUMMARY (test set)
+==========================================================================
+           Normal    Fraud
+count  56864.0000  98.0000
+mean       0.5021  22.1967
+std        1.4392  25.4004
+min        0.0452   0.1725
+50%        0.3277   9.9037
+95%        1.0932  72.8101
+99%        2.8584  81.9318
+max      101.3607  94.5924
+Normal test rows above threshold: 5.24%
+Fraud test rows above threshold : 86.73%
+
+==========================================================================
+6. DATA LEAKAGE AND LIMITATIONS OF THE ORIGINAL EVALUATION
+==========================================================================
+ 1. Train/test duplicates: 344 test rows have an exact copy in the training set; 336 normal test rows were literally seen by the Autoencoder during training. See section 4 for their effect.
+ 2. Duplicates inside the test set: 70 extra copies are counted more than once.
+ 3. Threshold chosen on training data the model had already fitted (and the same rows fed early stopping). Training errors are optimistically low, so the threshold tends to be too low -> more false alarms on new data. No separate validation set of normal rows exists.
+ 4. Random (not time-based) split over 48 hours: the model learned from transactions that happen AFTER some test transactions, and 'Time' is used as an input feature.
+ 5. Small number of test frauds (98): one fraud changes recall by about 1.02 percentage points - see the wide confidence intervals.
+ 6. Accuracy is misleading: 94.75% looks high but is below the 99.83% of a model that never predicts fraud.
+ 7. The 95th-percentile rule flags about 5% of normal traffic by design: 2,978 false alarms, 35.0 per fraud caught.
+ 8. Possibly undertrained: 10 epochs, validation loss still decreasing, early stopping never triggered.
+ 9. Not exactly reproducible: no TensorFlow random seed was set, so retraining gives different weights.
+10. Model provenance: the scaler statistics match training-normal rows exactly, but the weights file itself cannot prove which rows it was trained on.
+
+==========================================================================
+7. INTEGRITY CHECK AND OUTPUT FILES
+==========================================================================
+Protected input files unchanged after run: True
+results/metrics/baseline_evaluation_report.txt
+results/metrics/baseline_metrics.csv
+results/metrics/baseline_test_scores.csv
+results/graphs/baseline_pr_curve.png
+results/graphs/baseline_reconstruction_error_distribution.png
+results/graphs/baseline_confusion_matrix.png
